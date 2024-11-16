@@ -2,6 +2,7 @@
 # Disease Prediction System Using Flask and Decision Tree Classifier
 
 This is a web application that predicts diseases based on user-selected symptoms. It leverages machine learning, specifically a **Decision Tree Classifier**, trained on a labeled dataset of symptoms and diseases.
+This system also provides remedies for the predicted disease.
 
 ---
 
