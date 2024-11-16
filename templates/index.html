@@ -19,7 +19,7 @@
 
         /* Container */
         .container {
-            max-width: 600px;
+            max-width: 1100px;
             margin: 20px auto;
             padding: 20px;
             background: #ffffff;
@@ -71,31 +71,32 @@
         input[type="checkbox"] {
             display: none;
         }
-
+        
         input[type="checkbox"] + span {
-            display: flex;
+            display: inline-flex; /* Ensures proper alignment */
             justify-content: center;
             align-items: center;
-            width: 20px;
-            height: 20px;
+            width: 20px; /* Fixed width */
+            height: 20px; /* Fixed height */
             border: 2px solid #007bff;
-            border-radius: 50%;
+            border-radius: 50%; /* Ensures perfect circle */
             margin-right: 10px;
             transition: background-color 0.3s, border-color 0.3s;
+            box-sizing: border-box; /* Prevents any padding/margin issues */
         }
-
+        
         input[type="checkbox"]:checked + span {
             background-color: #28a745;
             border-color: #28a745;
             color: white;
         }
-
+        
         input[type="checkbox"]:checked + span::after {
             content: '✔';
             font-size: 12px;
             color: white;
         }
-
+        
         button[type="submit"] {
             align-self: center;
             background: #007bff;
@@ -113,6 +114,23 @@
             background: #0056b3;
         }
 
+        button#seeMoreButton {
+            align-self: center;
+            background: #6c757d;
+            color: white;
+            font-size: 16px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background 0.3s;
+        }
+
+        button#seeMoreButton:hover {
+            background: #5a6268;
+        }
+
         /* Prediction Box */
         .prediction {
             margin-top: 20px;
@@ -122,6 +140,11 @@
             padding: 10px;
             border-radius: 5px;
             border: 1px solid #d6e9c6;
+        }
+
+        /* Hidden Rows */
+        .hidden {
+            display: none;
         }
     </style>
 </head>
@@ -142,13 +165,16 @@
             <!-- Symptoms Checkbox Grid -->
             <div class="checkbox-grid" id="checkboxGrid">
                 {% for symptom in symptoms %}
-                    <label class="checkbox-item">
+                    <label class="checkbox-item symptom-row {{ 'hidden' if loop.index > 16 }}">
                         <input type="checkbox" name="{{ symptom }}">
                         <span></span>
                         {{ symptom.replace('_', ' ').capitalize() }}
                     </label>
                 {% endfor %}
             </div>
+            
+            <!-- See More Button -->
+            <button id="seeMoreButton" type="button" onclick="toggleRows()">See More</button>
 
             <button type="submit">Predict</button>
         </form>
@@ -175,6 +201,25 @@
                 }
             });
         }
+
+        // JavaScript for "See More" Button
+        function toggleRows() {
+            const hiddenSymptoms = document.querySelectorAll('.checkbox-grid .symptom-row');
+            const button = document.getElementById('seeMoreButton');
+            
+            // Check if we're showing more or less
+            const isShowingMore = button.textContent === 'See More';
+        
+            hiddenSymptoms.forEach((row, index) => {
+                if (index >= 16) { // Rows after the first 16
+                    row.style.display = isShowingMore ? "flex" : "none"; // Show if "See More" is clicked, hide otherwise
+                }
+            });
+        
+            // Update button text
+            button.textContent = isShowingMore ? 'See Less' : 'See More';
+        }
+        
     </script>
 </body>
 </html>
