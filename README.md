@@ -102,7 +102,7 @@ Below is an example decision tree for this dataset:
 ---
 
 ## Project Structure
-
+```bash
 .
 ├── app.py                # Main Flask application
 ├── Training.csv          # Training dataset
@@ -110,7 +110,7 @@ Below is an example decision tree for this dataset:
 ├── templates/
 │   └── index.html        # Frontend for symptom input
 └── README.md             # Project documentation
-
+```
 ---
 
 ## Installation
@@ -126,13 +126,18 @@ Ensure you have the following installed:
 ### Steps
 1. Clone the repository:
    ```bash
-   git clone <repository_url>
-   cd <repository_folder>
+   git clone https://github.com/Ganesh57803/disease_prediction.git
    ```
 2. Install the required dependencies:
    ```bash
    pip install flask scikit-learn pandas numpy
    ```
+   OR
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+   
 3. Run the application:
    ```bash
    python app.py
