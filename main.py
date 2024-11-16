@@ -1,7 +1,8 @@
 import pandas as pd
 from sklearn.tree import DecisionTreeClassifier
 from flask import Flask, render_template, request, jsonify
-
+import requests
+import json
 # Initialize Flask app
 app = Flask(__name__)
 
@@ -62,7 +63,47 @@ def predict():
     symptom_values = [1 if input_data.get(symptom) == 'on' else 0 for symptom in symptoms]
     prediction = clf.predict([symptom_values])[0]
     disease_name = next(key for key, value in disease_mapping.items() if value == prediction)
-    return render_template('index.html', symptoms=symptoms, prediction=disease_name)
+    
+    
+
+    # Ensure the API key is set in environment variables
+    # Ensure the API key is set in environment variables
+    API_KEY = "YOUR_API_KEY"
+    if not API_KEY:
+        raise ValueError("COHERE_API_KEY environment variable is not set.")
+
+    url = "https://api.cohere.ai/v1/generate"
+    # Construct the prompt
+    prompt = f"""Provide a comprehensive response for the health issue: {disease_name}. Include effective home remedies using simple, natural ingredients; commonly used medications (over-the-counter or prescribed) with general usage guidance; key precautions to manage or prevent the condition; and clear indicators of when to seek professional medical advice. Ensure the information is concise, easy to understand, and practical."""
+
+    headers = {
+        "Authorization": f"Bearer {API_KEY}",
+        "Content-Type": "application/json",
+    }
+
+    # Cohere payload structure
+    data = {
+        "model": "command-xlarge-nightly",  # Use your desired Cohere model
+        "prompt": prompt,
+        "max_tokens": 300,  # Adjust token count as needed
+        "temperature": 0.7,  # Controls creativity; lower values are more deterministic
+    }
+
+    try:
+        # Send the request to Cohere's API
+        response = requests.post(url, headers=headers, json=data)
+
+        if response.status_code == 200:
+            result = response.json()
+            data= result.get("generations", [{}])[0].get("text", "No response text")
+            print(data)
+        else:
+            print(f"Error: {response.status_code}, {response.text}")
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+
+
+    return render_template('index.html', symptoms=symptoms, prediction=disease_name,remedy=data)
 
 if __name__ == '__main__':
     app.run(debug=True)

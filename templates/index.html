@@ -96,6 +96,40 @@
             font-size: 12px;
             color: white;
         }
+        .remedy {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        
+        .remedy h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .remedy h4 {
+            color: #555;
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        
+        .remedy p {
+            color: #666;
+            margin: 10px 0;
+        }
+        
+        .remedy ul {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+        
+        .remedy li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
         
         button[type="submit"] {
             align-self: center;
@@ -184,6 +218,20 @@
                 <h2>Predicted Disease: {{ prediction }}</h2>
             </div>
         {% endif %}
+        {% if remedy %}
+<div class="remedy">
+    <h3>Remedy for {{ prediction }}</h3>
+    <div id="remedy-content"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+    // Convert Markdown from the `remedy` variable to HTML
+    const rawMarkdown = `{{ remedy | safe }}`; // Ensure this outputs raw, unescaped text
+    const htmlContent = marked.parse(rawMarkdown);
+    document.getElementById('remedy-content').innerHTML = htmlContent;
+</script>
+{% endif %}
+
     </div>
 
     <script>
